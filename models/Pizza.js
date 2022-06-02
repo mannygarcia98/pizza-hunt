@@ -5,9 +5,13 @@ const PizzaSchema = new Schema(
   {
     pizzaName: {
       type: String,
+      required: "You need to provide a pizza name.",
+      trim: true,
     },
     createdBy: {
       type: String,
+      required: "You need to provide your name.",
+      trim: true,
     },
     createdAt: {
       type: Date,
@@ -16,6 +20,8 @@ const PizzaSchema = new Schema(
     },
     size: {
       type: String,
+      required: true,
+      enum: ["Personal", "Small", "Medium", "Large", "Extra Large"],
       default: "Large",
     },
     toppings: [],
@@ -31,6 +37,7 @@ const PizzaSchema = new Schema(
       virtuals: true,
       getters: true,
     },
+    // prevents virtuals from creating duplicate of _id as `id`
     id: false,
   }
 );
@@ -40,8 +47,6 @@ PizzaSchema.virtual("commentCount").get(function () {
   return this.comments.reduce((total, comment) => total + comment.replies.length + 1, 0);
 });
 
-// create the Pizza model using the PizzaSchema
 const Pizza = model("Pizza", PizzaSchema);
 
-// export the Pizza model
 module.exports = Pizza;
